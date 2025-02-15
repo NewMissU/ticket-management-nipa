@@ -66,19 +66,19 @@ The frontend is built using React.js with Vite for fast development, and Tailwin
 Navigate to the frontend folder:
 
 ```bash
-  cd frontend
+cd frontend
 ```
 
 Install dependencies:
 
 ```bash
-  npm install
+npm install
 ```
 
 Start the React app:
 
 ```bash
-  npm run dev
+npm run dev
 ```
 
 The frontend will be available at 👉 http://localhost:5173.
