@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+/* #root {
+  @apply h-full overflow-auto;
+} */
+
+header {
+  @apply flex px-4 md:px-6 py-6 bg-blue-500 text-white items-center;
+}
+
+body {
+  /* @apply bg-gray-100 antialiased; */
+  @apply bg-gray-100 antialiased;
+  /* @apply bg-red-200 antialiased; */
+}
+
+main {
+  @apply w-full min-h-screen;
+  /* @apply w-full h-full overflow-auto; */
+}
+
+footer {
+  @apply px-4 md:px-6 py-3 bg-slate-600 text-white;
+}
