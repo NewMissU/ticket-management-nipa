@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useTickets } from "../contexts/TicketContext";
 import { TiTag } from "react-icons/ti";
+import { MdEditSquare } from "react-icons/md";
 
 const KanbanBoard = () => {
   const { tickets, updateTicketState, filterStatus, setFilterStatus } =
@@ -127,12 +128,15 @@ const KanbanBoard = () => {
                   .map((ticket) => (
                     <div
                       key={ticket.id}
-                      className={`flex flex-col gap-1 p-3 bg-white rounded-md shadow-sm my-4 ${statusColorsIn[status]}  `}
+                      className={`flex flex-col gap-1 p-3 bg-white rounded-md shadow-sm my-4 ${statusColorsIn[status]} cursor-pointer `}
                       onClick={() => openModal(ticket)}
                     >
-                      <div className="flex gap-2 items-center">
-                        <TiTag />
-                        <p className="font-semibold">{ticket.title}</p>
+                      <div className="flex gap-2 items-center  justify-between">
+                        <div className="flex items-center gap-2 ">
+                          <TiTag />
+                          <p className="font-semibold">{ticket.title}</p>
+                        </div>
+                        <MdEditSquare className="text-2xl text-gray-400" />
                       </div>
                       <div className="flex gap-2">
                         <h1 className="text-sm font-semibold">Desc:</h1>
