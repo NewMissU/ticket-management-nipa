@@ -11,9 +11,6 @@ const NavBar = () => {
       ? "bg-blue-700/60 rounded px-3 py-2"
       : "hover:bg-blue-700/20 rounded px-3 py-2";
 
-  const activeMobileLink = ({ isActive }) =>
-    isActive ? "bg-red-700/60 " : "hover:bg-red-700/20";
-
   return (
     <>
       <header>

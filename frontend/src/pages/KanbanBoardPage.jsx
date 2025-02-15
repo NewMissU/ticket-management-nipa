@@ -1,9 +1,7 @@
-import React, { useState } from "react";
-// import KanbanBoard from "../components/KanbanBoard";
-import TestKanban from "../components/TestKanban";
+import KanbanBoard from "../components/KanbanBoard";
 
 const KanbanBoardPage = () => {
-  return <TestKanban />;
+  return <KanbanBoard />;
 };
 
 export default KanbanBoardPage;

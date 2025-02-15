@@ -1,12 +1,12 @@
-import React, { Children, useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
+import { useTickets } from "../contexts/TicketContext";
 import { TiTag } from "react-icons/ti";
-import { fetchTicketsAllStatusAPI, updateTicketAPI } from "../apis/api";
 
 const KanbanBoard = () => {
-  //  * เก็บข้อมูล Ticket ทั้งหมด
-  const [tickets, setTickets] = useState([]);
-  const [reloadTickets, setReloadTickets] = useState(false); // State สำหรับ trigger การโหลดข้อมูลใหม่
+  const { tickets, updateTicketState, filterStatus, setFilterStatus } =
+    useTickets(); // ใช้ข้อมูลจาก context
   const [selectedTicketForUpdate, setSelectedTicketForUpdate] = useState(null);
+  // const [filterStatus, setFilterStatus] = useState("all");
 
   const statuses = ["pending", "accepted", "resolved", "rejected"];
 
@@ -31,32 +31,8 @@ const KanbanBoard = () => {
     rejected: "bg-red-300/80",
   };
 
-  // const BASE_URL = `http://127.0.0.1:8000`; // * ตัวแปรเก็บ URL API
-
-  // * ดึงข้อมูล Ticket จาก API
-  // const fetchTickets = async () => {
-  //   try {
-  //     // * ดึงข้อมูลจาก API
-  //     const response = await axios.get(`${BASE_URL}/tickets`);
-  //     setTickets(response.data); // * นำข้อมูลที่ดึงมาใส่ใน state
-  //   } catch (error) {
-  //     console.log("ERROR", error);
-  //   }
-  // };
-
-  // * useEffect ทำงานเพียงครั้งเดียว ใส่ [] ว่าง
-  // useEffect(() => {
-  //   fetchTickets();
-  // }, []);
-
-  //empty array ([]): การใส่ array ว่างหมายความว่า useEffect จะทำงานเพียงครั้งเดียวหลังจากการเรนเดอร์แรกเท่านั้น
-  useEffect(() => {
-    const loadTickets = async () => {
-      const data = await fetchTicketsAllStatusAPI();
-      setTickets(data);
-    };
-    loadTickets();
-  }, [reloadTickets]); //* หากมีการเปลี่ยนแปลง state reloadTickets ให้โหลดข้อมูลใหม่ (เรียกใช้ useEffect)
+  // ✅ คำนวณว่าจะแสดงกี่คอลัมน์ (all = 4, อื่นๆ = 2)
+  let displayedStatuses = filterStatus === "all" ? statuses : [filterStatus];
 
   const dialogModal = useRef();
 
@@ -85,69 +61,73 @@ const KanbanBoard = () => {
     }));
   };
 
-  // const submitUpdateForm = (e) => {
-  //   e.preventDefault();
-  //   //Call api to update ticket
-  //   updateTicket(selectedTicketForUpdate);
-  //   dialogModal.current.close();
-  //   console.log(selectedTicketForUpdate);
-  // };
-
   const submitUpdateForm = async (e) => {
     e.preventDefault();
-    //Call api to update ticket
-    const updatedTicket = await updateTicketAPI(selectedTicketForUpdate); // * แก้ข้อมูลใน db แล้ว
-    console.log("need: ", updatedTicket);
-    setTickets((previousState) =>
-      previousState.map((ticket) =>
-        ticket.id === updatedTicket.id ? updatedTicket : ticket
-      )
-    );
-
-    // ✅ โหลดข้อมูลใหม่ทั้งหมด ให้แสดงข้อมูลที่อัพเดทแล้ว
-    // const newTickets = await fetchTickets(); // ดึงข้อมูล ticket ทั้งหมดใหม่
-    // setTickets(newTickets);
-    setReloadTickets(!reloadTickets);
+    // เรียกฟังก์ชัน updateTicketState ที่อยู่ใน context เพื่ออัพเดต ticket
+    await updateTicketState(selectedTicketForUpdate);
     dialogModal.current.close();
-    // console.log(selectedTicketForUpdate);
   };
-
-  // const updateTicket = async (ticket) => {
-  //   try {
-  //     const response = await axios.put(
-  //       `${BASE_URL}/tickets/${ticket.id}`,
-  //       ticket
-  //     );
-  //     console.log("✅ Ticket updated:", response.data);
-  //     fetchTickets();
-  //   } catch (error) {
-  //     console.error("❌ Failed to update ticket:", error);
-  //   }
-  // };
 
   return (
     <>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 my-1">
-        {statuses.map((status) => (
+      <div className="flex justify-center pt-6">
+        <div className="flex items-center gap-4">
+          <label htmlFor="filterStatus" className="text-lg font-semibold">
+            Filter by status
+          </label>
+          <select
+            id="filterStatus"
+            className="p-2 border rounded-md shadow-sm bg-white"
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+          >
+            <option value="all">all</option>
+            {statuses.map((status) => (
+              <option
+                key={status}
+                value={status}
+                className={`${statusColorsIn[status]}`}
+              >
+                {status}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+      {/* ✅ Grid ที่เปลี่ยนตาม Filter */}
+      <div
+        className={`grid gap-4 p-4 my-1 ${
+          filterStatus === "all"
+            ? "sm:grid-cols-2 lg:grid-cols-4"
+            : "grid-cols-1 w-3/4 mx-auto"
+        }`}
+      >
+        {/* เปลี่ยนจาก statuses เป็น displayedStatuses จากที่แสดงทุก status เป็นตาม ที่เลือก */}
+        {displayedStatuses.map((status) => (
           <div key={status}>
-            <h2 className="text-xl font-bold text-center capitalize pb-2">
+            <h2 className={`text-xl font-bold text-center capitalize pb-2`}>
               {status}
             </h2>
             <div
-              className={`p-4 rounded-lg shadow-md min-h-[200px] bg-gray-200/70 ${statusColorsOut[status]} overflow-y-auto  h-screen`}
+              className={`p-4 rounded-lg shadow-md min-h-[200px] bg-gray-200/70 ${statusColorsOut[status]} overflow-y-auto  h-screen `}
             >
               {/* <h2 className="text-xl font-bold text-center capitalize">
-              {status}
-            </h2> */}
-
-              <div className="mt-2 space-y-2 ">
+                  {status}
+                </h2> */}
+              <div
+                className={`mt-2 space-y-2 ${
+                  filterStatus === "all"
+                    ? ""
+                    : "grid-col-1 md:grid grid-cols-2 gap-x-5 "
+                }`}
+              >
                 {/* ✅ แสดงเฉพาะ Ticket ที่มี status ตรงกัน */}
                 {tickets
                   .filter((ticket) => ticket.status === status)
                   .map((ticket) => (
                     <div
                       key={ticket.id}
-                      className={`flex flex-col gap-1 p-3 bg-white rounded-md shadow-sm my-4 ${statusColorsIn[status]} `}
+                      className={`flex flex-col gap-1 p-3 bg-white rounded-md shadow-sm my-4 ${statusColorsIn[status]}  `}
                       onClick={() => openModal(ticket)}
                     >
                       <div className="flex gap-2 items-center">
@@ -176,6 +156,7 @@ const KanbanBoard = () => {
           </div>
         ))}
       </div>
+
       {/* Modal */}
       <dialog
         ref={dialogModal}
@@ -252,7 +233,7 @@ const KanbanBoard = () => {
               <select
                 name="status"
                 id="status"
-                className="focus:outline-none w-full"
+                className={`focus:outline-none w-full `}
                 value={selectedTicketForUpdate?.status || ""}
                 onChange={handleFormChange}
                 required

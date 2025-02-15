@@ -16,7 +16,6 @@ function App() {
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Homepage />} />
         <Route path="/kanban" element={<KanbanBoardPage />} />
-        {/* <Route path="/test" element={<TestKanban />} /> */}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     )
