@@ -165,7 +165,7 @@ def update_ticket(ticket_id: int, ticket: Ticket): # * รับข้อมู�
             existing_ticket = cur.fetchone()
             
             if not existing_ticket:
-                raise HTTPException(status_code=404, detail="Ticket not found")
+                raise HTTPException(status_code=404, detail="No tickets found")
             
             query = """
                 UPDATE tickets 

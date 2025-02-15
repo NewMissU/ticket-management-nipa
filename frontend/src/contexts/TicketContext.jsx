@@ -33,7 +33,20 @@ export const TicketProvider = ({ children }) => {
       } else {
         data = await fetchTicketsByStatusAPI(filterStatus);
       }
-      setTickets(data);
+      // ตรวจสอบว่า data มีข้อมูลหรือไม่
+      if (data && Array.isArray(data) && data.length > 0) {
+        // ถ้ามีข้อมูล
+        const filteredData = data.filter(
+          (ticket) => ticket.description && ticket.description !== ""
+        );
+        setTickets(filteredData);
+        console.log("Filtered tickets with description: ", filteredData);
+      } else {
+        // ถ้าไม่มีข้อมูล
+        setTickets([]);
+        console.log("No tickets found or empty response");
+      }
+      // setTickets(data);
     };
     loadTickets();
     console.log("FROM useEffect | reloadTickets: ", reloadTickets);

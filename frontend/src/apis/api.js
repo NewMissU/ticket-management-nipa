@@ -27,7 +27,11 @@ export const fetchTicketsAllStatusAPI = async () => {
       return response.data
     //   setTickets(response.data); // * นำข้อมูลที่ดึงมาใส่ใน state
     } catch (error) {
-      console.log("ERROR", error);
+      if (error.response && error.response.status === 404) {
+        console.log("❌ No tickets found (404 error)");
+      } else {
+        console.log("ERROR", error);
+      }
     }
   };
 
@@ -37,7 +41,11 @@ export const fetchTicketsByStatusAPI = async (status) => {
     return response.data;
   }
   catch(error){
-    console.log("ERROR", error);
+    if (error.response && error.response.status === 404) {
+      console.log("❌ No tickets found (404 error)");
+    } else {
+      console.log("ERROR", error);
+    }
   }
 }
 
@@ -52,7 +60,11 @@ export const updateTicketAPI = async (ticket) => {
       return response.data;
     //  await fetchTickets();
     } catch (error) {
-      console.error("❌ Failed to update ticket:", error);
+      if (error.response && error.response.status === 404) {
+        console.error(`❌ Ticket with id ${ticket.id} not found`);
+      } else {
+        console.error("❌ Failed to update ticket:", error);
+      }
       return null;
     }
   };
