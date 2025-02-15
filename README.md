@@ -81,3 +81,7 @@ npm run dev
 ```
 
 The frontend will be available at 👉 http://localhost:5173.
+
+## Possible Issue: UI Not Loading
+
+If the UI does not load, please **refresh the website once** and try again.
