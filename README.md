@@ -1,4 +1,3 @@
-<!-- 
 # Helpdesk Support Ticket Management Application
 
 This is a full-stack helpdesk support ticket management application, built with a FastAPI backend and a React.js frontend using Vite. The backend communicates with a PostgreSQL database and allows users to create, view, and manage support tickets.
@@ -58,8 +57,6 @@ The backend will be available at 👉 http://127.0.0.1:8000.
 
 API documents Swagger UI 👉 http://127.0.0.1:8000/docs
 
-
-
 ## Frontend (React with Vite)
 
 The frontend is built using React.js with Vite for fast development, and Tailwind CSS v4.0 for styling the user interface.
@@ -68,19 +65,19 @@ The frontend is built using React.js with Vite for fast development, and Tailwin
 Navigate to the frontend folder:
 
 ```bash
-  cd frontend
+cd frontend
 ```
 
 Install dependencies:
 
 ```bash
-  npm install
+npm install
 ```
 
 Start the React app:
 
 ```bash
-  npm run dev
+npm run dev
 ```
 
-The frontend will be available at 👉 http://localhost:5173. -->
+The frontend will be available at 👉 http://localhost:5173.
